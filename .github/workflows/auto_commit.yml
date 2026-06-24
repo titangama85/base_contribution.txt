@@ -1,0 +1,28 @@
+```yaml
+name: Generate Base Commits
+
+on:
+  workflow_dispatch:
+
+jobs:
+  make-commits:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Run 100 Commits Script
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        for i in {1..100}; do
+          echo "Base milestone verification: $i" >> tracking_log.txt
+          git add tracking_log.txt
+          git commit -m "chore: base network progress footprint series-$i"
+        done
+
+    - name: Push Changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
